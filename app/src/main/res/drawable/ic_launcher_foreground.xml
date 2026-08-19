@@ -1,0 +1,36 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:scaleX="0.65"
+        android:scaleY="0.65"
+        android:translateX="18.9"
+        android:translateY="18.9">
+        <!-- Backpack Main Body -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M32,32 C32,24 40,18 54,18 C68,18 76,24 76,32 L76,82 C76,88 70,92 64,92 L44,92 C38,92 32,88 32,82 Z" />
+        <!-- Top Handle -->
+        <path
+            android:fillColor="#00000000"
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="4"
+            android:strokeLineCap="round"
+            android:pathData="M44,20 C44,12 64,12 64,20" />
+        <!-- Front Pocket -->
+        <path
+            android:fillColor="#80CBC4"
+            android:pathData="M36,54 C36,50 40,48 45,48 L63,48 C68,48 72,50 72,54 L72,82 C72,86 68,88 64,88 L44,88 C40,88 36,86 36,82 Z" />
+        <!-- Golden Star / Badge -->
+        <path
+            android:fillColor="#FFD54F"
+            android:pathData="M54,58 L56.5,63.5 L62.5,64.2 L58,68.2 L59.3,74 L54,71 L48.7,74 L50,68.2 L45.5,64.2 L51.5,63.5 Z" />
+        <!-- Open Book Accent on top -->
+        <path
+            android:fillColor="#FFCA28"
+            android:pathData="M40,36 C46,33 52,35 54,37 C56,35 62,33 68,36 L68,44 C62,41 56,43 54,45 C52,43 46,41 40,44 Z" />
+    </group>
+</vector>
+

@@ -1,0 +1,7 @@
+{
+  "name": "قِرايتي | Qiraati",
+  "description": "المساعد الدراسي الذكي للولي الجزائري لمتابعة دراسة أبنائه، جدول الحصص، الواجبات وتجهيز محفظة الغد",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

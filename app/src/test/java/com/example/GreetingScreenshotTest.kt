@@ -4,7 +4,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onRoot
 import com.example.data.model.AlgerianDayOfWeek
 import com.example.data.model.TomorrowPreparationSummary
-import com.example.ui.screens.TomorrowPreparationHeroCard
+import com.example.ui.screens.TomorrowScreen
 import com.example.ui.theme.MyApplicationTheme
 import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
 import com.github.takahirom.roborazzi.captureRoboImage
@@ -43,10 +43,14 @@ class GreetingScreenshotTest {
 
         composeTestRule.setContent {
             MyApplicationTheme {
-                TomorrowPreparationHeroCard(
+                TomorrowScreen(
+                    activeStudent = null,
                     summary = sampleSummary,
+                    onToggleBackpackItem = { _, _ -> },
                     onMarkAllReady = {},
-                    onViewDetails = {}
+                    onResetBackpack = {},
+                    onToggleHomework = { _, _ -> },
+                    onAddCustomItem = { _, _ -> }
                 )
             }
         }

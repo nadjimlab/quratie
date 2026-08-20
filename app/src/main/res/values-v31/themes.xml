@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.MyApplication" parent="android:style/Theme.DeviceDefault.NoActionBar">
+        <item name="android:windowBackground">@color/qiraati_splash_background</item>
+        <item name="android:windowSplashScreenBackground">@color/qiraati_splash_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/qiraati_logo</item>
+        <item name="android:windowSplashScreenAnimationDuration">80</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@color/qiraati_splash_background</item>
+        <item name="android:navigationBarColor">@color/qiraati_splash_background</item>
+    </style>
+</resources>

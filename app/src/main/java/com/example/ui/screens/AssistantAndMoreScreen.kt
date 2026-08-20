@@ -40,7 +40,6 @@ fun AssistantAndMoreScreen(
     onSendMessage: (String) -> Unit,
     onAddStudent: () -> Unit,
     onDeleteStudent: (StudentEntity) -> Unit,
-    onOpenPro: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var selectedTab by remember { mutableIntStateOf(0) } // 0: AI Assistant Chat, 1: Children Management, 2: Subjects Directory, 3: Algerian Holidays
@@ -342,37 +341,6 @@ fun AssistantAndMoreScreen(
                         }
                     }
 
-                    item {
-                        Surface(
-                            shape = RoundedCornerShape(20.dp),
-                            color = OrangeContainer,
-                            border = androidx.compose.foundation.BorderStroke(1.dp, OrangeAccent.copy(alpha = 0.2f)),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { onOpenPro() }
-                        ) {
-                            Row(
-                                modifier = Modifier.padding(14.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(10.dp)
-                            ) {
-                                Text("👑", fontSize = 24.sp)
-                                Column {
-                                    Text(
-                                        text = "قِرايتي بلس (Qiraati+)",
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 14.sp,
-                                        color = OnOrangeContainer
-                                    )
-                                    Text(
-                                        text = "إمكانية متابعة جميع الأبناء بدون حدود مع ميزات الذكاء الاصطناعي المتقدمة.",
-                                        fontSize = 12.sp,
-                                        color = OnOrangeContainer.copy(alpha = 0.8f)
-                                    )
-                                }
-                            }
-                        }
-                    }
                 }
             }
 

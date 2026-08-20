@@ -201,8 +201,6 @@ class QiraatiViewModel(application: Application) : AndroidViewModel(application)
     private val _showCelebration = MutableStateFlow(false)
     val showCelebration = _showCelebration.asStateFlow()
 
-    private val _showProDialog = MutableStateFlow(false)
-    val showProDialog = _showProDialog.asStateFlow()
 
     fun selectStudent(studentId: Long) {
         viewModelScope.launch {
@@ -219,13 +217,6 @@ class QiraatiViewModel(application: Application) : AndroidViewModel(application)
         _appLanguage.value = if (_appLanguage.value == "AR") "FR" else "AR"
     }
 
-    fun openProDialog() {
-        _showProDialog.value = true
-    }
-
-    fun closeProDialog() {
-        _showProDialog.value = false
-    }
 
     fun dismissCelebration() {
         _showCelebration.value = false
@@ -241,11 +232,6 @@ class QiraatiViewModel(application: Application) : AndroidViewModel(application)
         colorHex: String = "#00695C"
     ) {
         viewModelScope.launch {
-            val count = allStudents.value.size
-            if (count >= 1 && !_isPremiumUser()) {
-                // Freemium limit prompt
-                _showProDialog.value = true
-            }
             val newId = repository.addStudent(name, levelCode, stream, schoolName, avatarEmoji, colorHex)
             selectStudent(newId)
             // Apply standard curriculum template
@@ -508,5 +494,4 @@ class QiraatiViewModel(application: Application) : AndroidViewModel(application)
         _ocrDraftSlots.value = emptyList()
     }
 
-    private fun _isPremiumUser(): Boolean = true // Full access enabled for optimal parent experience
 }

@@ -75,7 +75,6 @@ fun QiraatiApp(viewModel: QiraatiViewModel) {
     val isOcrScanning by viewModel.isOcrScanning.collectAsStateWithLifecycle()
     val ocrDraftSlots by viewModel.ocrDraftSlots.collectAsStateWithLifecycle()
     val showCelebration by viewModel.showCelebration.collectAsStateWithLifecycle()
-    val showProDialog by viewModel.showProDialog.collectAsStateWithLifecycle()
 
     var showAddStudentDialog by remember { mutableStateOf(false) }
     var showOcrScannerDialog by remember { mutableStateOf(false) }
@@ -300,8 +299,7 @@ fun QiraatiApp(viewModel: QiraatiViewModel) {
                     isAiLoading = isAiLoading,
                     onSendMessage = { viewModel.askAiAssistant(it) },
                     onAddStudent = { showAddStudentDialog = true },
-                    onDeleteStudent = { viewModel.deleteStudent(it) },
-                    onOpenPro = { viewModel.openProDialog() }
+                    onDeleteStudent = { viewModel.deleteStudent(it) }
                 )
             }
         }
@@ -342,9 +340,4 @@ fun QiraatiApp(viewModel: QiraatiViewModel) {
         )
     }
 
-    if (showProDialog) {
-        ProUpgradeDialog(
-            onDismiss = { viewModel.closeProDialog() }
-        )
-    }
 }

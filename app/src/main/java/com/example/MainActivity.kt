@@ -1,5 +1,8 @@
 package com.example
 
+import android.Manifest
+import android.os.Build
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,6 +27,8 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.notifications.DailyReminderScheduler
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -42,6 +47,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        DailyReminderScheduler.schedule(this)
+        if (
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+        ) {
+            requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 1001)
+        }
 
         setContent {
             MyApplicationTheme {
@@ -321,6 +333,9 @@ fun QiraatiApp(viewModel: QiraatiViewModel) {
             draftSlots = ocrDraftSlots,
             onScanText = { rawText ->
                 viewModel.scanTimetableWithAi(null, rawText)
+            },
+            onScanImage = { bitmap ->
+                viewModel.scanTimetableWithAi(bitmap, null)
             },
             onConfirm = { drafts ->
                 viewModel.confirmOcrDrafts(drafts)

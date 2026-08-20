@@ -4,6 +4,7 @@ import com.example.data.model.AlgerianHoliday
 import com.example.data.model.SubjectEntity
 
 object AlgerianCurriculum {
+    const val SCHOOL_YEAR = "2026/2027"
 
     val OFFICIAL_SUBJECTS = listOf(
         SubjectEntity(
@@ -177,64 +178,64 @@ object AlgerianCurriculum {
         AlgerianHoliday(
             nameAr = "عطلة الخريف",
             nameFr = "Vacances d'Automne",
-            startDate = "2024-10-29",
-            endDate = "2024-11-03",
+            startDate = "2026-10-29",
+            endDate = "2026-11-03",
             seasonBadge = "خريف",
             iconEmoji = "🍂"
         ),
         AlgerianHoliday(
             nameAr = "عطلة الشتاء",
             nameFr = "Vacances d'Hiver",
-            startDate = "2024-12-19",
-            endDate = "2024-01-05",
+            startDate = "2026-12-19",
+            endDate = "2027-01-05",
             seasonBadge = "شتاء",
             iconEmoji = "❄️"
         ),
         AlgerianHoliday(
             nameAr = "عطلة الربيع",
             nameFr = "Vacances de Printemps",
-            startDate = "2025-03-20",
-            endDate = "2025-04-06",
+            startDate = "2027-03-20",
+            endDate = "2027-04-06",
             seasonBadge = "ربيع",
             iconEmoji = "🌸"
         ),
         AlgerianHoliday(
             nameAr = "عطلة الصيف الرسمية",
             nameFr = "Vacances d'Été",
-            startDate = "2025-07-03",
-            endDate = "2025-09-15",
+            startDate = "2027-07-03",
+            endDate = "2027-09-15",
             seasonBadge = "صيف",
             iconEmoji = "☀️"
         ),
         AlgerianHoliday(
             nameAr = "عيد الثورة (01 نوفمبر)",
             nameFr = "Fête de la Révolution",
-            startDate = "2024-11-01",
-            endDate = "2024-11-01",
+            startDate = "2026-11-01",
+            endDate = "2026-11-01",
             seasonBadge = "عطلة وطنية",
             iconEmoji = "🇩🇿"
         ),
         AlgerianHoliday(
             nameAr = "رأس السنة الأمازيغية (يناير - 12 جانفي)",
             nameFr = "Yennayer",
-            startDate = "2025-01-12",
-            endDate = "2025-01-12",
+            startDate = "2027-01-12",
+            endDate = "2027-01-12",
             seasonBadge = "عطلة رسمية",
             iconEmoji = "ⵣ"
         ),
         AlgerianHoliday(
             nameAr = "عيد الفطر المبارك",
             nameFr = "Aïd El Fitr",
-            startDate = "2025-03-30",
-            endDate = "2025-04-01",
+            startDate = "2027-03-09",
+            endDate = "2027-03-11",
             seasonBadge = "عطلة دينية",
             iconEmoji = "🌙"
         ),
         AlgerianHoliday(
             nameAr = "عيد الاستقلال (05 جويلية)",
             nameFr = "Fête de l'Indépendance",
-            startDate = "2025-07-05",
-            endDate = "2025-07-05",
+            startDate = "2027-07-05",
+            endDate = "2027-07-05",
             seasonBadge = "عطلة وطنية",
             iconEmoji = "🇩🇿"
         )

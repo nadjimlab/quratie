@@ -424,7 +424,7 @@ fun AssistantAndMoreScreen(
                                         color = OnIndigoContainer
                                     )
                                     Text(
-                                        text = "الموسم الدراسي الحالي للجمهورية الجزائرية الديمقراطية الشعبية",
+                                        text = "الموسم الدراسي ${AlgerianCurriculum.SCHOOL_YEAR} للجمهورية الجزائرية الديمقراطية الشعبية",
                                         fontSize = 11.sp,
                                         color = OnIndigoContainer.copy(alpha = 0.8f)
                                     )

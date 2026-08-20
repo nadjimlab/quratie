@@ -1,5 +1,9 @@
 package com.example.ui.components
 
+import android.Manifest
+import android.graphics.Bitmap
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -626,6 +630,7 @@ fun TimetableScannerDialog(
     isScanning: Boolean,
     draftSlots: List<ParsedSlotDraft>,
     onScanText: (String) -> Unit,
+    onScanImage: (Bitmap) -> Unit,
     onConfirm: (List<ParsedSlotDraft>) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -637,6 +642,16 @@ fun TimetableScannerDialog(
 الأربعاء: رياضيات (08:00 - 09:00)، فيزياء (09:00 - 10:00)، عربية (10:15 - 11:15)، اجتماعيات (11:15 - 12:15)
 الخميس: رياضيات (08:00 - 09:00)، فرنسية (09:00 - 10:00)، علوم (10:15 - 11:15)، تربية بدنية (11:15 - 12:15)"""
         )
+    }
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicturePreview()
+    ) { bitmap ->
+        bitmap?.let(onScanImage)
+    }
+    val cameraPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) cameraLauncher.launch(null)
     }
 
     Dialog(onDismissRequest = onDismiss) {
@@ -686,6 +701,32 @@ fun TimetableScannerDialog(
                         color = TextSlate500
                     )
 
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Button(
+                            onClick = { cameraPermissionLauncher.launch(Manifest.permission.CAMERA) },
+                            enabled = !isScanning,
+                            colors = ButtonDefaults.buttonColors(containerColor = IndigoPrimary),
+                            shape = RoundedCornerShape(16.dp),
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Icon(imageVector = Icons.Default.CameraAlt, contentDescription = null)
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text("تصوير الجدول", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                        }
+                        OutlinedButton(
+                            onClick = { /* إدخال النص متاح في الحقل أدناه */ },
+                            shape = RoundedCornerShape(16.dp),
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Icon(imageVector = Icons.Default.ContentPaste, contentDescription = null)
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text("لصق النص", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                        }
+                    }
+
                     OutlinedTextField(
                         value = textInput,
                         onValueChange = { textInput = it },
@@ -693,7 +734,7 @@ fun TimetableScannerDialog(
                             .fillMaxWidth()
                             .height(180.dp),
                         shape = RoundedCornerShape(16.dp),
-                        label = { Text("نص الجدول أو مستخرج الـ OCR") }
+                        label = { Text("نص الجدول أو مستخرج الـ OCR (اختياري)") }
                     )
 
                     Button(

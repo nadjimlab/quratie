@@ -634,15 +634,7 @@ fun TimetableScannerDialog(
     onConfirm: (List<ParsedSlotDraft>) -> Unit,
     onDismiss: () -> Unit
 ) {
-    var textInput by remember {
-        mutableStateOf(
-            """الأحد: رياضيات (08:00 - 09:00)، عربية (09:00 - 10:00)، علوم (10:15 - 11:15)، إسلامية (11:15 - 12:15)
-الإثنين: فيزياء (08:00 - 09:00)، رياضيات (09:00 - 10:00)، إنجليزية (10:15 - 11:15)، مدنية (11:15 - 12:15)، تربية بدنية (13:30 - 15:30)
-الثلاثاء: عربية (08:00 - 09:00)، فرنسية (09:00 - 10:00)، علوم (10:15 - 11:15)، رسم (11:15 - 12:15)
-الأربعاء: رياضيات (08:00 - 09:00)، فيزياء (09:00 - 10:00)، عربية (10:15 - 11:15)، اجتماعيات (11:15 - 12:15)
-الخميس: رياضيات (08:00 - 09:00)، فرنسية (09:00 - 10:00)، علوم (10:15 - 11:15)، تربية بدنية (11:15 - 12:15)"""
-        )
-    }
+    var textInput by remember { mutableStateOf("") }
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicturePreview()
     ) { bitmap ->
@@ -683,7 +675,7 @@ fun TimetableScannerDialog(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "مسح الجدول بالذكاء الاصطناعي (OCR)",
+                            text = "استيراد الجدول بالكاميرا",
                             fontWeight = FontWeight.Bold,
                             fontSize = 15.sp,
                             color = IndigoPrimary
@@ -701,30 +693,18 @@ fun TimetableScannerDialog(
                         color = TextSlate500
                     )
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    Button(
+                        onClick = { cameraPermissionLauncher.launch(Manifest.permission.CAMERA) },
+                        enabled = !isScanning,
+                        colors = ButtonDefaults.buttonColors(containerColor = IndigoPrimary),
+                        shape = RoundedCornerShape(16.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp)
                     ) {
-                        Button(
-                            onClick = { cameraPermissionLauncher.launch(Manifest.permission.CAMERA) },
-                            enabled = !isScanning,
-                            colors = ButtonDefaults.buttonColors(containerColor = IndigoPrimary),
-                            shape = RoundedCornerShape(16.dp),
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Icon(imageVector = Icons.Default.CameraAlt, contentDescription = null)
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text("تصوير الجدول", fontWeight = FontWeight.Bold, fontSize = 12.sp)
-                        }
-                        OutlinedButton(
-                            onClick = { /* إدخال النص متاح في الحقل أدناه */ },
-                            shape = RoundedCornerShape(16.dp),
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Icon(imageVector = Icons.Default.ContentPaste, contentDescription = null)
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text("لصق النص", fontWeight = FontWeight.Bold, fontSize = 12.sp)
-                        }
+                        Icon(imageVector = Icons.Default.CameraAlt, contentDescription = null)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("التقاط صورة الجدول وتحليله", fontWeight = FontWeight.Bold)
                     }
 
                     OutlinedTextField(
@@ -734,7 +714,7 @@ fun TimetableScannerDialog(
                             .fillMaxWidth()
                             .height(180.dp),
                         shape = RoundedCornerShape(16.dp),
-                        label = { Text("نص الجدول أو مستخرج الـ OCR (اختياري)") }
+                        label = { Text("أو الصق نص الجدول يدويًا (اختياري)") }
                     )
 
                     Button(
@@ -757,7 +737,7 @@ fun TimetableScannerDialog(
                         } else {
                             Icon(imageVector = Icons.Default.AutoAwesome, contentDescription = null)
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("تحليل واستخراج الحصص بالذكاء الاصطناعي", fontWeight = FontWeight.Bold)
+                            Text("تحليل النص واستخراج الحصص", fontWeight = FontWeight.Bold)
                         }
                     }
                 } else {

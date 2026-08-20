@@ -54,10 +54,11 @@ fun AssistantAndMoreScreen(
             .padding(horizontal = 16.dp)
     ) {
         // Sub-tabs in High Density style
-        TabRow(
+        ScrollableTabRow(
             selectedTabIndex = selectedTab,
             containerColor = Color.White,
             contentColor = IndigoPrimary,
+            edgePadding = 8.dp,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)

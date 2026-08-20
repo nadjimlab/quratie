@@ -251,7 +251,123 @@ fun HomeScreen(
             }
         }
 
-        // 3. High Density Backpack Section (White Container with Slate rows)
+        // 3. Parent and student daily control center
+        item {
+            val backpackTotal = tomorrowSummary?.totalItemsCount ?: 0
+            val backpackReady = tomorrowSummary?.packedItemsCount ?: 0
+            val backpackProgress = if (backpackTotal > 0) {
+                (backpackReady.toFloat() / backpackTotal).coerceIn(0f, 1f)
+            } else 0f
+
+            Surface(
+                shape = RoundedCornerShape(28.dp),
+                color = Color.White,
+                border = androidx.compose.foundation.BorderStroke(1.dp, SlateBorderLight),
+                shadowElevation = 1.dp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("daily_follow_up_card")
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(18.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "مركز المتابعة اليومية",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 15.sp,
+                                color = TextSlate900
+                            )
+                            Text(
+                                text = "خطوات بسيطة تساعد الولي والتلميذ على التقدم اليومي.",
+                                fontSize = 11.sp,
+                                color = TextSlate500
+                            )
+                        }
+                        Text(text = "✓", color = EmeraldAccent, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Surface(
+                            shape = RoundedCornerShape(16.dp),
+                            color = IndigoContainer,
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Column(modifier = Modifier.padding(12.dp)) {
+                                Text(text = "حصص اليوم", fontSize = 10.5.sp, color = TextSlate500)
+                                Text(text = "${todaySlots.size}", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = IndigoPrimary)
+                            }
+                        }
+                        Surface(
+                            shape = RoundedCornerShape(16.dp),
+                            color = OrangeContainer,
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Column(modifier = Modifier.padding(12.dp)) {
+                                Text(text = "واجبات معلقة", fontSize = 10.5.sp, color = TextSlate500)
+                                Text(text = "${pendingHomework.size}", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = OrangeAccent)
+                            }
+                        }
+                        Surface(
+                            shape = RoundedCornerShape(16.dp),
+                            color = EmeraldContainer,
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Column(modifier = Modifier.padding(12.dp)) {
+                                Text(text = "المحفظة", fontSize = 10.5.sp, color = TextSlate500)
+                                Text(text = if (backpackTotal > 0) "$backpackReady/$backpackTotal" else "—", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = EmeraldAccentDark)
+                            }
+                        }
+                    }
+
+                    if (backpackTotal > 0) {
+                        LinearProgressIndicator(
+                            progress = { backpackProgress },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(7.dp)
+                                .clip(RoundedCornerShape(8.dp)),
+                            color = EmeraldAccent,
+                            trackColor = SlateBorderLight
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        OutlinedButton(
+                            onClick = onNavigateToHomework,
+                            shape = RoundedCornerShape(14.dp),
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(text = "أكمل واجبي", fontSize = 11.5.sp, fontWeight = FontWeight.Bold)
+                        }
+                        Button(
+                            onClick = onNavigateToAssistant,
+                            shape = RoundedCornerShape(14.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = IndigoPrimary),
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(text = "أراجع مع المساعد", fontSize = 11.5.sp, fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
+            }
+        }
+
+        // 4. High Density Backpack Section (White Container with Slate rows)
         item {
             Surface(
                 shape = RoundedCornerShape(28.dp),
@@ -400,7 +516,7 @@ fun HomeScreen(
             }
         }
 
-        // 4. Today's Classes Section (High Density styled)
+        // 5. Today's Classes Section (High Density styled)
         item {
             Surface(
                 shape = RoundedCornerShape(28.dp),

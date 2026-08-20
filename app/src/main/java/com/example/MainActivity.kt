@@ -55,11 +55,24 @@ class MainActivity : ComponentActivity() {
             requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 1001)
         }
 
+        val shouldShowWelcome = !getPreferences(MODE_PRIVATE).getBoolean("welcome_seen", false)
         setContent {
+            var showWelcome by remember { mutableStateOf(shouldShowWelcome) }
             MyApplicationTheme {
-                // Ensure natural RTL layout direction for Arabic experience
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-                    QiraatiApp(viewModel = viewModel)
+                    if (showWelcome) {
+                        WelcomeScreen(
+                            onContinue = {
+                                getPreferences(MODE_PRIVATE)
+                                    .edit()
+                                    .putBoolean("welcome_seen", true)
+                                    .apply()
+                                showWelcome = false
+                            }
+                        )
+                    } else {
+                        QiraatiApp(viewModel = viewModel)
+                    }
                 }
             }
         }

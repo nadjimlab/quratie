@@ -39,12 +39,14 @@ fun ChildSelectorHeader(
 ) {
     Surface(
         color = BgLight,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
+            .statusBarsPadding()
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 8.dp)
+                .padding(horizontal = 20.dp, vertical = 10.dp)
         ) {
             // Main Top Bar in High Density style
             Row(

@@ -2,6 +2,13 @@
 
 ## [Unreleased] — 2026-08-21
 
+### النشر العام خارج Google Play
+
+- إضافة `.github/workflows/android-public-release.yml` لبناء APK Release موقّع ونشره تلقائيًا في GitHub Releases عند استخدام Tag يبدأ بـ `v`.
+- إضافة `update.json` إلى كل إصدار عام ليستعمله `UpdateChecker` داخل التطبيق.
+- إرفاق SHA-256 للـ APK مع كل إصدار للتحقق من سلامة الملف.
+- الحفاظ على `com.qiraati.dzstudy` ومفتاح التوقيع الحالي.
+
 ### Firebase App Distribution
 
 - إضافة `.github/workflows/firebase-app-distribution.yml` لبناء APK Release موقّع وتوزيعه يدويًا على Firebase App Distribution.

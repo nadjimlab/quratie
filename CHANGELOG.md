@@ -2,6 +2,12 @@
 
 ## [Unreleased] — 2026-08-21
 
+### Firebase App Distribution
+
+- إضافة `.github/workflows/firebase-app-distribution.yml` لبناء APK Release موقّع وتوزيعه يدويًا على Firebase App Distribution.
+- يعتمد Workflow على مفاتيح التوقيع الحالية ولا يغير `com.qiraati.dzstudy`.
+- يتطلب إعداد أسرار `FIREBASE_SERVICE_ACCOUNT_JSON` و`FIREBASE_ANDROID_APP_ID` داخل بيئة GitHub `qiraati-upload`.
+
 ### أمان Gemini
 
 - إزالة استدعاء Gemini المباشر من تطبيق Android وإزالة متغير `GEMINI_API_KEY` من ملف البيئة الخاص بالتطبيق.

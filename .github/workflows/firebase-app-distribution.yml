@@ -1,0 +1,107 @@
+name: Firebase App Distribution
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_notes:
+        description: "Release notes shown to testers"
+        required: true
+        default: "نسخة تجريبية من تطبيق Qiraati 2026/2027"
+      testers_group:
+        description: "Firebase App Distribution tester group"
+        required: true
+        default: "qiraati-parents"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: firebase-app-distribution-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  distribute:
+    name: Build and distribute signed Release APK
+    runs-on: ubuntu-latest
+    environment: qiraati-upload
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Accept Android SDK licenses
+        run: yes | sdkmanager --licenses > /dev/null || true
+
+      - name: Install Android SDK packages
+        run: sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      - name: Decode release keystore
+        shell: bash
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          test -n "$ANDROID_KEYSTORE_BASE64"
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/qiraati-upload.jks"
+          chmod 600 "$RUNNER_TEMP/qiraati-upload.jks"
+          echo "KEYSTORE_PATH=$RUNNER_TEMP/qiraati-upload.jks" >> "$GITHUB_ENV"
+
+      - name: Build signed Release APK
+        env:
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          KEYSTORE_TYPE: PKCS12
+        run: |
+          test -n "$STORE_PASSWORD"
+          test -n "$KEY_PASSWORD"
+          ./gradlew assembleRelease --no-daemon --stacktrace
+
+      - name: Write Firebase service account
+        shell: bash
+        env:
+          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+        run: |
+          test -n "$FIREBASE_SERVICE_ACCOUNT_JSON"
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT_JSON" > "$RUNNER_TEMP/firebase-service-account.json"
+          chmod 600 "$RUNNER_TEMP/firebase-service-account.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/firebase-service-account.json" >> "$GITHUB_ENV"
+
+      - name: Install Firebase CLI
+        run: npm install --global firebase-tools
+
+      - name: Distribute APK to Firebase App Distribution
+        env:
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
+          TESTERS_GROUP: ${{ inputs.testers_group }}
+          RELEASE_NOTES: ${{ inputs.release_notes }}
+        run: |
+          test -n "$FIREBASE_APP_ID"
+          printf '%s\n' "$RELEASE_NOTES" > "$RUNNER_TEMP/release-notes.txt"
+          firebase appdistribution:distribute app/build/outputs/apk/release/app-release.apk \
+            --app "$FIREBASE_APP_ID" \
+            --groups "$TESTERS_GROUP" \
+            --release-notes-file "$RUNNER_TEMP/release-notes.txt"
+
+      - name: Upload signed APK artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: qiraati-release-apk-${{ github.run_number }}
+          path: app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error
+          retention-days: 30

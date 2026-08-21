@@ -15,6 +15,7 @@ android {
 
   defaultConfig {
     applicationId = "com.qiraati.dzstudy"
+    buildConfigField("String", "GEMINI_PROXY_URL", "\"https://YOUR_REGION-YOUR_PROJECT.cloudfunctions.net\"")
     minSdk = 24
     targetSdk = 36
     versionCode = 1
@@ -101,7 +102,6 @@ dependencies {
   implementation(libs.androidx.room.runtime)
   implementation(libs.coil.compose)
   implementation(libs.converter.moshi)
-  implementation(libs.firebase.ai)
   // Uncomment to use Firestore:
   // implementation(libs.firebase.firestore)
 

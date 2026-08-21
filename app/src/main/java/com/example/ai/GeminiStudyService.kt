@@ -17,7 +17,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.POST
-import retrofit2.http.Query
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
@@ -66,12 +65,9 @@ data class GeminiCandidate(
     val content: GeminiContent? = null
 )
 
-interface GeminiRestApi {
-    @POST("v1beta/models/gemini-3.5-flash:generateContent")
-    suspend fun generateContent(
-        @Query("key") apiKey: String,
-        @Body request: GeminiRequest
-    ): GeminiResponse
+interface GeminiProxyApi {
+    @POST("geminiProxy")
+    suspend fun generateContent(@Body request: GeminiRequest): GeminiResponse
 }
 
 data class ParsedSlotDraft(
@@ -95,13 +91,15 @@ class GeminiStudyService {
         .writeTimeout(60, TimeUnit.SECONDS)
         .build()
 
+    private val proxyBaseUrl = BuildConfig.GEMINI_PROXY_URL.trimEnd('/') + "/"
+
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://generativelanguage.googleapis.com/")
+        .baseUrl(proxyBaseUrl)
         .client(okHttpClient)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()
 
-    private val api = retrofit.create(GeminiRestApi::class.java)
+    private val api = retrofit.create(GeminiProxyApi::class.java)
 
     /**
      * Ask the smart educational assistant with full context about student, schedule, homework, and exams.
@@ -115,11 +113,6 @@ class GeminiStudyService {
         upcomingExams: List<ExamWithSubject>,
         allSubjects: List<SubjectEntity>
     ): String = withContext(Dispatchers.IO) {
-        val apiKey = try {
-            BuildConfig.GEMINI_API_KEY
-        } catch (e: Exception) {
-            ""
-        }
 
         // Build rich contextual prompt
         val contextInfo = buildStudentContext(
@@ -144,16 +137,6 @@ class GeminiStudyService {
             5. لا تخترع معلومات غير موجودة في بيانات التلميذ، بل وجه الولي بوضوح.
         """.trimIndent()
 
-        if (apiKey.isNullOrBlank() || apiKey == "MY_GEMINI_API_KEY") {
-            // High-quality local smart reasoning engine fallback
-            return@withContext generateLocalSmartAnswer(
-                question = question,
-                student = student,
-                tomorrowSlots = tomorrowSlots,
-                pendingHomework = pendingHomework,
-                upcomingExams = upcomingExams
-            )
-        }
 
         try {
             val userPrompt = """
@@ -179,7 +162,7 @@ class GeminiStudyService {
                 )
             )
 
-            val response = api.generateContent(apiKey, request)
+            val response = api.generateContent(request)
             val answer = response.candidates?.firstOrNull()?.content?.parts?.firstOrNull()?.text
             if (!answer.isNullOrBlank()) {
                 answer
@@ -200,11 +183,6 @@ class GeminiStudyService {
         studentLevel: String,
         knownSubjects: List<SubjectEntity>
     ): List<ParsedSlotDraft> = withContext(Dispatchers.IO) {
-        val apiKey = try {
-            BuildConfig.GEMINI_API_KEY
-        } catch (e: Exception) {
-            ""
-        }
 
         val subjectNames = knownSubjects.joinToString(", ") { it.nameAr }
         val prompt = """
@@ -226,7 +204,7 @@ class GeminiStudyService {
             1,3,10:15,11:15,علوم طبيعية,مخبر 1
         """.trimIndent()
 
-        if (apiKey.isNullOrBlank() || apiKey == "MY_GEMINI_API_KEY" || (bitmap == null && rawText.isNullOrBlank())) {
+        if (bitmap == null && rawText.isNullOrBlank()) {
             return@withContext generateSampleParsedTimetable(knownSubjects)
         }
 
@@ -250,7 +228,7 @@ class GeminiStudyService {
                 generationConfig = GeminiGenConfig(temperature = 0.2f, maxOutputTokens = 1500)
             )
 
-            val response = api.generateContent(apiKey, request)
+            val response = api.generateContent(request)
             val output = response.candidates?.firstOrNull()?.content?.parts?.firstOrNull()?.text ?: ""
             parseCsvToSlots(output, knownSubjects)
         } catch (e: Exception) {

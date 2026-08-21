@@ -4,6 +4,8 @@ import android.Manifest
 import android.os.Build
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.content.Intent
+import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -28,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.notifications.DailyReminderScheduler
+import com.example.update.UpdateChecker
+import com.example.update.UpdateManifest
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -58,6 +62,10 @@ class MainActivity : ComponentActivity() {
         val shouldShowWelcome = !getPreferences(MODE_PRIVATE).getBoolean("welcome_seen", false)
         setContent {
             var showWelcome by remember { mutableStateOf(shouldShowWelcome) }
+            var availableUpdate by remember { mutableStateOf<UpdateManifest?>(null) }
+            LaunchedEffect(Unit) {
+                availableUpdate = UpdateChecker().check()
+            }
             MyApplicationTheme {
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
                     if (showWelcome) {
@@ -72,6 +80,21 @@ class MainActivity : ComponentActivity() {
                         )
                     } else {
                         QiraatiApp(viewModel = viewModel)
+                    }
+                    availableUpdate?.let { update ->
+                        AlertDialog(
+                            onDismissRequest = { if (!update.mandatory) availableUpdate = null },
+                            title = { Text("تحديث جديد متاح") },
+                            text = { Text("الإصدار ${update.versionName} متاح الآن. ${update.releaseNotes}".trim()) },
+                            confirmButton = {
+                                TextButton(onClick = {
+                                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(update.downloadUrl)))
+                                }) { Text("تحميل التحديث") }
+                            },
+                            dismissButton = if (!update.mandatory) {
+                                { TextButton(onClick = { availableUpdate = null }) { Text("لاحقًا") } }
+                            } else null
+                        )
                     }
                 }
             }

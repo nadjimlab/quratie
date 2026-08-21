@@ -1,0 +1,15 @@
+{
+  "name": "qiraati-functions",
+  "private": true,
+  "engines": {
+    "node": "20"
+  },
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "firebase-functions": "^6.3.2"
+  }
+}

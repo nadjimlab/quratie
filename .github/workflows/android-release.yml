@@ -17,6 +17,7 @@ jobs:
   release:
     name: Build signed Release AAB
     runs-on: ubuntu-latest
+    environment: qiraati-upload
     timeout-minutes: 25
     steps:
       - name: Checkout

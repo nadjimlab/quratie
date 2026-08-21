@@ -15,4 +15,10 @@
 .cxx
 local.properties
 .env
+.env.*
+!.env.example
+*.keystore
+*.jks
+*.p12
+*.pfx
 debug.keystore

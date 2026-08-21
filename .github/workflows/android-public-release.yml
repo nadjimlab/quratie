@@ -79,7 +79,6 @@ jobs:
         run: |
           test -f app/build/outputs/apk/release/app-release.apk
           unzip -l app/build/outputs/apk/release/app-release.apk | grep -q 'AndroidManifest.xml'
-          sha256sum app/build/outputs/apk/release/app-release.apk > app-release.apk.sha256
 
       - name: Prepare public release metadata
         env:
@@ -89,11 +88,14 @@ jobs:
           test -n "$RELEASE_TAG"
           case "$RELEASE_TAG" in v*) ;; *) echo "Tag must start with v"; exit 1;; esac
           VERSION_NAME="${RELEASE_TAG#v}"
+          APK_NAME="Qiraati-${VERSION_NAME}.apk"
+          cp app/build/outputs/apk/release/app-release.apk "$APK_NAME"
+          sha256sum "$APK_NAME" > "${APK_NAME}.sha256"
           cat > update.json <<EOF
           {
             "versionCode": 1,
             "versionName": "$VERSION_NAME",
-            "downloadUrl": "https://github.com/${GITHUB_REPOSITORY}/releases/download/${RELEASE_TAG}/app-release.apk",
+            "downloadUrl": "https://github.com/${GITHUB_REPOSITORY}/releases/download/${RELEASE_TAG}/${APK_NAME}",
             "releaseNotes": "$RELEASE_NOTES",
             "mandatory": false
           }
@@ -105,9 +107,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
         run: |
+          VERSION_NAME="${RELEASE_TAG#v}"
+          APK_NAME="Qiraati-${VERSION_NAME}.apk"
           gh release create "$RELEASE_TAG" \
-            app/build/outputs/apk/release/app-release.apk \
-            app-release.apk.sha256 \
+            "$APK_NAME" \
+            "${APK_NAME}.sha256" \
             update.json \
             --repo "$GITHUB_REPOSITORY" \
             --title "Qiraati $RELEASE_TAG" \

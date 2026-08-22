@@ -17,7 +17,7 @@ class QiraatiApplication : Application() {
         FirebaseAnalytics.getInstance(this).logEvent("qiraati_app_initialized", null)
         FirebaseMessaging.getInstance().subscribeToTopic(QiraatiFirebase.TOPIC_UPDATES)
 
-        // Uses the Google test configuration until the owner supplies production AdMob IDs.
+        // Initializes AdMob with the production App ID declared in AndroidManifest.xml.
         MobileAds.initialize(this)
         QiraatiTelemetry.record(this, "app_open")
         QiraatiTelemetry.record(this, "session_start")

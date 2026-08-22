@@ -108,6 +108,10 @@ fun QiraatiApp(viewModel: QiraatiViewModel) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: AppDestination.Home.route
 
+    LaunchedEffect(currentRoute) {
+        QiraatiFirebase.logScreen(currentRoute)
+    }
+
     val allStudents by viewModel.allStudents.collectAsStateWithLifecycle()
     val activeStudent by viewModel.activeStudent.collectAsStateWithLifecycle()
     val selectedDayIndex by viewModel.selectedDayIndex.collectAsStateWithLifecycle()
@@ -137,7 +141,13 @@ fun QiraatiApp(viewModel: QiraatiViewModel) {
             )
         },
         bottomBar = {
-            NavigationBar(
+            Column {
+                QiraatiBannerAd(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                )
+                NavigationBar(
                 containerColor = Color.White,
                 tonalElevation = 0.dp,
                 modifier = Modifier
@@ -263,6 +273,7 @@ fun QiraatiApp(viewModel: QiraatiViewModel) {
                     colors = navItemColors,
                     modifier = Modifier.testTag("nav_item_more")
                 )
+                }
             }
         },
         modifier = Modifier.fillMaxSize()

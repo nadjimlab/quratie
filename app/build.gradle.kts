@@ -16,6 +16,7 @@ android {
   defaultConfig {
     applicationId = "com.qiraati.dzstudy"
     buildConfigField("String", "GEMINI_PROXY_URL", "\"https://YOUR_REGION-YOUR_PROJECT.cloudfunctions.net\"")
+    buildConfigField("String", "QIRAATI_TELEMETRY_URL", "\"https://qiraatidl-ec93nzmz.manus.space/api/telemetry\"")
     minSdk = 24
     targetSdk = 36
     versionCode = 1
@@ -102,8 +103,10 @@ dependencies {
   implementation(libs.androidx.room.runtime)
   implementation(libs.coil.compose)
   implementation(libs.converter.moshi)
-  // Uncomment to use Firestore:
-  // implementation(libs.firebase.firestore)
+  implementation(libs.firebase.analytics)
+  implementation(libs.firebase.messaging)
+  implementation(libs.firebase.firestore)
+  implementation(libs.play.services.ads)
 
   // Uncomment ALL FOUR of the following dependencies together to use Firebase Auth and Google
   // Sign-In via Credential Manager:
@@ -112,6 +115,7 @@ dependencies {
   // implementation(libs.androidx.credentials.play.services)
   // implementation(libs.googleid)
   implementation(libs.firebase.appcheck.recaptcha)
+  implementation(libs.firebase.auth)
   implementation(libs.kotlinx.coroutines.android)
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.logging.interceptor)

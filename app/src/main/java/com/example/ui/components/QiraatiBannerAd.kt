@@ -7,7 +7,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 
-private const val GOOGLE_TEST_BANNER_ID = "ca-app-pub-3940256099942544/6300978111"
+private const val PRODUCTION_BANNER_ID = "ca-app-pub-3702051947920006/9108526764"
 
 @Composable
 fun QiraatiBannerAd(modifier: Modifier = Modifier) {
@@ -16,7 +16,7 @@ fun QiraatiBannerAd(modifier: Modifier = Modifier) {
         factory = { context ->
             AdView(context).apply {
                 setAdSize(AdSize.BANNER)
-                adUnitId = GOOGLE_TEST_BANNER_ID
+                adUnitId = PRODUCTION_BANNER_ID
                 loadAd(AdRequest.Builder().build())
             }
         }

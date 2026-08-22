@@ -18,10 +18,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
-        <!-- Official Google test App ID; replace only after creating the production AdMob account. -->
+        <!-- Production AdMob App ID supplied by the owner. -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713" />
+            android:value="ca-app-pub-3702051947920006~1281017954" />
         <service
             android:name=".notifications.QiraatiMessagingService"
             android:exported="false">
